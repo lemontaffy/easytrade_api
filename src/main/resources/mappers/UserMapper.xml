@@ -1,0 +1,18 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cake.easytrade.mapper.UserMapper">
+
+    <select id="findById" parameterType="String" resultType="com.cake.easytrade.model.User">
+        SELECT * FROM users WHERE id = #{id}
+    </select>
+
+    <select id="findByEmail" resultType="com.cake.easytrade.model.User">
+        SELECT * FROM users WHERE email = #{email}
+    </select>
+
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO users (username, email, auth_provider, auth_id)
+        VALUES (#{username}, #{email}, #{authProvider}, #{authId})
+    </insert>
+
+</mapper>
