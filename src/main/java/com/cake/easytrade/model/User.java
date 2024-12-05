@@ -16,6 +16,7 @@ public class User {
     private String password; // Nullable for SSO
     private String authProvider; // 'local', 'google', etc.
     private String authId; // Unique identifier from SSO
+    private String linkedAuthId; // Linked Auth Id if SSO link using
     private LocalDateTime createdAt;
 
     // Getters and setters

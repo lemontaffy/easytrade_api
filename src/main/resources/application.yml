@@ -1,0 +1,77 @@
+# Default configuration
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/easytrade
+    username: ${DB_USERNAME} # Environment variable for username
+    password: ${DB_PASSWORD} # Environment variable for password
+  mybatis:
+    mapper-locations: classpath:mappers/*.xml
+    type-aliases-package: com.cake.easytrade.model
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: your_google_client_id
+            client-secret: your_google_client_secret
+            redirect-uri: "{baseUrl}/login/oauth2/code/google"
+            scope:
+              - email
+              - profile
+        provider:
+          google:
+            issuer-uri: https://accounts.google.com
+
+cors:
+  allowed-origin: http://localhost:3000
+
+---
+# Local profile-specific configuration
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:postgresql://localhost:5432/easytrade
+    username: ${DB_USERNAME} # Environment variable for username
+    password: ${DB_PASSWORD} # Environment variable for password
+  server:
+    port: 8081
+
+cors:
+  allowed-origin: http://localhost:3000
+
+---
+# Development profile-specific configuration
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:mysql://dev-db:3306/easytrade
+    username: dev_user
+    password: dev_password
+  server:
+    port: 8081
+
+cors:
+  allowed-origin: http://localhost:3000
+
+---
+# Production profile-specific configuration
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:mysql://prod-db:3306/easytrade
+    username: prod_user
+    password: prod_password
+  server:
+    port: 8082
+
+cors:
+  allowed-origin: https://www.your-production-site.com

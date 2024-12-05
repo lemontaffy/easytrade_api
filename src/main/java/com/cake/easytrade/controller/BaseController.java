@@ -25,8 +25,8 @@ public abstract class BaseController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
-    protected <T> ResponseEntity<T> notFound(T body) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    protected ResponseEntity<?> notFound(String message) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
     protected <T> ResponseEntity<T> internalServerError(T body) {

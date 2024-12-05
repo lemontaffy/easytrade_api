@@ -13,4 +13,10 @@ public interface UserMapper {
     void insertUser(User user) throws Exception;
 
     User findByEmail(String email) throws Exception;
+
+    void updateLocalUser(User user);
+
+    void updateSsoUser(User user);
+
+    void deleteUser(Long id);
 }

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
 
 <mapper namespace="com.cake.easytrade.mapper.UserMapper">
@@ -10,9 +11,44 @@
         SELECT * FROM users WHERE email = #{email}
     </select>
 
-    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO users (username, email, auth_provider, auth_id)
-        VALUES (#{username}, #{email}, #{authProvider}, #{authId})
+    <insert id="insertUser" parameterType="com.cake.easytrade.model.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO users (username, email, password, auth_provider, auth_id)
+        VALUES (#{username}, #{email},
+        <choose>
+            <when test="authProvider == 'local'">
+                #{password}
+            </when>
+            <otherwise>
+                NULL
+            </otherwise>
+        </choose>,
+        #{authProvider},
+        <choose>
+            <when test="authProvider != 'local'">
+                #{authId}
+            </when>
+            <otherwise>
+                NULL
+            </otherwise>
+        </choose>)
     </insert>
+
+    <update id="updateLocalUser">
+        UPDATE users
+        SET username = #{username}, email = #{email}, password = #{password}
+        WHERE id = #{id} AND auth_provider = 'local'
+    </update>
+
+    <update id="updateSsoUser">
+        UPDATE users
+        SET username = #{username}, email = #{email}
+        WHERE id = #{id} AND auth_provider != 'local'
+    </update>
+
+    <update id="linkAccount">
+        UPDATE users
+        SET linked_auth_id = #{linkedAuthId}
+        WHERE id = #{id}
+    </update>
 
 </mapper>
