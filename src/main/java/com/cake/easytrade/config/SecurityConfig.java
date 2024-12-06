@@ -3,6 +3,7 @@ package com.cake.easytrade.config;
 import com.cake.easytrade.core.Const;
 import com.cake.easytrade.model.Role;
 import jakarta.servlet.DispatcherType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -19,7 +21,7 @@ public class SecurityConfig {
 
     private static final String[] PUBLIC_URL = new String[]{
             "/favicon*",
-            "/login", Const.API+"/login",
+            Const.API+"/auth/**",
             Const.API+"/common/user/change/password",
             Const.API+Const.PUBLIC_URL+"/**", //항상 open 되는 url
             Const.API+"/user/register", Const.API+"/user/logout",
@@ -29,6 +31,9 @@ public class SecurityConfig {
     private static final String[] ADMIN_URL = new String[]{
             Const.API+Const.SYSTEM_URL+"/**",
     };
+
+    @Autowired
+    private CorsConfigurationSource corsConfigurationSource;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -40,17 +45,14 @@ public class SecurityConfig {
                     authorizeRequests.requestMatchers(ADMIN_URL).hasAnyAuthority("ROLE_ADMIN");
                     authorizeRequests.anyRequest().authenticated();
                 })
-                .sessionManagement(sessionManagement ->
-                        sessionManagement
-                                .sessionFixation().migrateSession()
-                )
-                .logout((logoutConfig ->
-                                logoutConfig.logoutUrl(Const.API+"/logout")
-                                        .invalidateHttpSession(true)  // 세션 무효화
-                                        .deleteCookies("JSESSIONID")  // 쿠키 삭제
-                                        .permitAll()
-                        )
-                );
+                .sessionManagement(sessionManagement -> sessionManagement.sessionFixation().migrateSession())
+                .logout(logoutConfig -> logoutConfig.logoutUrl(Const.API + "/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID").permitAll());
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource))  // Use custom CORS configuration
+                .oauth2Login(oauth2Login -> {
+                    oauth2Login
+                            .loginPage("/login")  // Specify custom login page URL if needed
+                            .permitAll();
+                });
         return http.build();
     }
 

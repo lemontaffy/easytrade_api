@@ -2,14 +2,19 @@
 server:
   port: 8081
 
+mybatis:
+  mapper-locations: classpath:com/cake/easytrade/mapper/*.xml
+  type-aliases-package: com.cake.easytrade.model
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/easytrade
     username: ${DB_USERNAME} # Environment variable for username
     password: ${DB_PASSWORD} # Environment variable for password
-  mybatis:
-    mapper-locations: classpath:mappers/*.xml
-    type-aliases-package: com.cake.easytrade.model
   security:
     oauth2:
       client:
