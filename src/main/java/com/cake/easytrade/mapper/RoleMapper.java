@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface RoleMapper {
 
     @Select("SELECT id, name FROM roles WHERE id = CAST(#{roleId} AS BIGINT)")
-    Role findById(String roleId);
+    Role findById(Long roleId);
 }

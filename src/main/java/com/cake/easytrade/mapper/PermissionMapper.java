@@ -14,6 +14,9 @@ public interface PermissionMapper {
     })
     Permission findByUserId(Long id) throws Exception;
 
+    @Select("SELECT ur.role_id FROM user_roles ur WHERE ur.user_id = #{id}")
+    Long findRoleIdByUserId(Long id);
+
     @Insert("INSERT INTO user_roles (user_id, role_id) " +
             "VALUES (#{userId}, #{roleId})")
     void insertUserRole(Long userId, Long roleId);

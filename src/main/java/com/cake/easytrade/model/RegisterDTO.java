@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Permission {
-    private Long userId;
-    private Long roleId;
+public class RegisterDTO {
+    private User user;
+    private String photoUrl;
 }

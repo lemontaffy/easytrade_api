@@ -4,10 +4,12 @@ import com.cake.easytrade.config.JwtKeyProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+@Component
 public class JwtUtil {
 
     // Expiration times
@@ -25,10 +27,11 @@ public class JwtUtil {
      * @param role  The role of the user.
      * @return A JWT Access Token.
      */
-    public static String generateAccessToken(String email, String role) {
+    public static String generateAccessToken(String email, String role, Long userId) {
         return Jwts.builder()
                 .setSubject(email)
                 .claim("role", role)
+                .claim("userId", userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
                 .signWith(ACCESS_SECRET_KEY, SignatureAlgorithm.HS256)
@@ -41,9 +44,10 @@ public class JwtUtil {
      * @param email The email of the user.
      * @return A JWT Refresh Token.
      */
-    public static String generateRefreshToken(String email) {
+    public static String generateRefreshToken(String email, Long userId) {
         return Jwts.builder()
                 .setSubject(email)
+                .claim("userId", userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
                 .signWith(REFRESH_SECRET_KEY, SignatureAlgorithm.HS256)

@@ -4,23 +4,34 @@ import com.cake.easytrade.config.core.JwtAuthenticationFilter;
 import com.cake.easytrade.core.Const;
 import com.cake.easytrade.model.Role;
 import jakarta.servlet.DispatcherType;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+@AllArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final UserDetailsService userDetailsService;
 
     private static final String[] PUBLIC_URL = new String[]{
             "/favicon*",
@@ -65,13 +76,26 @@ public class SecurityConfig {
                     authorizeRequests.requestMatchers(ADMIN_URL).hasAnyAuthority("ROLE_ADMIN");
                     authorizeRequests.anyRequest().authenticated();
                 })
-                .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class) // Add JWT filter
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT filter
                 .sessionManagement(sessionManagement -> sessionManagement.sessionFixation().migrateSession())
                 .logout(logoutConfig -> logoutConfig.logoutUrl(Const.API + "/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID").permitAll())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource));
 //                .oauth2Login(oauth2Login -> oauth2Login.loginPage("/login").permitAll());
 //                .debug();  // Enable debugging
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
     }
 
     @Bean

@@ -9,6 +9,7 @@ mybatis:
 logging:
   level:
     org.springframework.web: DEBUG
+    com.cake.easytrade: DEBUG
 
 spring:
   datasource:

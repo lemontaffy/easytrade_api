@@ -67,8 +67,8 @@ public class AuthService {
         }
 
         // Step 5: Generate Access Token and Refresh Token
-        String accessToken = JwtUtil.generateAccessToken(user.getEmail(), role.getName());
-        String refreshToken = JwtUtil.generateRefreshToken(user.getEmail());
+        String accessToken = JwtUtil.generateAccessToken(user.getEmail(), role.getName(), user.getId());
+        String refreshToken = JwtUtil.generateRefreshToken(user.getEmail(), user.getId());
 
 
         // Step 6: Return both tokens in a map
@@ -103,6 +103,6 @@ public class AuthService {
         }
 
         // Step 5: Generate a new Access Token
-        return JwtUtil.generateAccessToken(email, role.getName());
+        return JwtUtil.generateAccessToken(email, role.getName(), user.getId());
     }
 }
