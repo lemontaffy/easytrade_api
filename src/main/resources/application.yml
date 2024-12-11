@@ -12,10 +12,18 @@ logging:
     com.cake.easytrade: DEBUG
 
 spring:
+  web:
+    resources:
+      static-locations: file:C:/cake/easytrade_be/uploads/
   datasource:
     url: jdbc:postgresql://localhost:5432/easytrade
     username: ${DB_USERNAME} # Environment variable for username
     password: ${DB_PASSWORD} # Environment variable for password
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
   security:
     oauth2:
       client:
@@ -34,6 +42,9 @@ spring:
 cors:
   allowed-origin: http://localhost:3000
 
+file:
+  path: C:/cake/easytrade_be/uploads
+
 ---
 # Local profile-specific configuration
 spring:
@@ -49,6 +60,9 @@ spring:
 
 cors:
   allowed-origin: http://localhost:3000
+
+file:
+  path: C:/cake/easytrade_be/uploads
 
 ---
 # Development profile-specific configuration

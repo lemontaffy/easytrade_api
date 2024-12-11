@@ -1,6 +1,5 @@
 package com.cake.easytrade.mapper;
 
-import com.cake.easytrade.handler.CommaSeparatedStringTypeHandler;
 import com.cake.easytrade.model.User;
 import com.cake.easytrade.model.UserProfileMulti;
 import org.apache.ibatis.annotations.*;
@@ -30,8 +29,23 @@ public interface UserMapper {
             "is_active = #{isActive} WHERE id = #{profileId}")
     void updateProfile(UserProfileMulti userProfile);
 
-    @Select("SELECT id, photo_url AS photoUrl, is_active AS isActive FROM user_profile_multi WHERE user_id = #{userId}")
+    @Select("SELECT * FROM user_profile_multi WHERE user_id = #{userId}")
+    @Results({
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "photoUrl", column = "photo_url"),
+            @Result(property = "createdAt", column = "created_at"),
+            @Result(property = "active", column = "is_active")
+    })
     List<UserProfileMulti> getUserProfiles(@Param("userId") Long userId);
+
+    @Select("SELECT * FROM user_profile_multi WHERE user_id = #{userId} AND is_active = #{active}")
+    @Results({
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "photoUrl", column = "photo_url"),
+            @Result(property = "createdAt", column = "created_at"),
+            @Result(property = "active", column = "is_active")
+    })
+    UserProfileMulti getActiveProfile(@Param("userId") Long userId, boolean active);
 
     @Update("UPDATE user_profile_multi SET is_active = FALSE WHERE user_id = #{userId}")
     void deactivateProfiles(@Param("userId") Long userId);

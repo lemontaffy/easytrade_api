@@ -33,9 +33,6 @@ public class User {
     private List<String> linkedAuthId = new ArrayList<>(); // Initialize to an empty list
     private LocalDateTime createdAt;
 
-    @Size(max = 50)
-    private String nickname;
-
     @Size(max = 255)
     private String address;
 
@@ -50,4 +47,8 @@ public class User {
     private LocalDateTime updatedAt;
 
     public boolean enabled;
+
+    // Additional field not in the database
+    private String nickname;
+    private Long RoleId;
 }

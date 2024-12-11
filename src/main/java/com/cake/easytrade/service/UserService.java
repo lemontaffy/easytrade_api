@@ -20,6 +20,8 @@ import java.util.Optional;
 public class UserService {
 
     private final UserMapper userMapper;
+    private final PermissionMapper permissionMapper;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public Optional<User> getUserById(Long id) {
         return userMapper.findById(id);
@@ -27,12 +29,17 @@ public class UserService {
 
     @Transactional
     public User registerUser(User user, String photoUrl) {
+        // Encode the password before saving
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         // Insert user into users table
         userMapper.insertUser(user);
+        Long userId = user.getId();
+
+        permissionMapper.insertUserRole(userId, user.getRoleId());
 
         // Create default profile (nickname must already be in user object)
         UserProfileMulti profile = new UserProfileMulti();
-        profile.setUserId(user.getId());
+        profile.setUserId(userId);
         profile.setPhotoUrl(photoUrl);
         profile.setNickname(user.getNickname()); // Provided from frontend
         profile.setActive(true);

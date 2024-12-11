@@ -35,7 +35,8 @@ public class SecurityConfig {
 
     private static final String[] PUBLIC_URL = new String[]{
             "/favicon*",
-            Const.API+"/auth/login", Const.API+"/auth/refresh",
+            "/uploads/**",
+            Const.API+"/auth/login", Const.API+"/auth/refresh", Const.API+"/auth/status",
             Const.API+"/common/user/change/password",
             Const.API+Const.PUBLIC_URL+"/**", //항상 open 되는 url
             Const.API+"/user/register", Const.API+"/user/logout",

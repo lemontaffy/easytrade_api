@@ -6,12 +6,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
-public class WebConfig {
+public class WebConfig implements WebMvcConfigurer {
 
     @Value("${cors.allowed-origin}")
     private String allowedOrigin;
@@ -28,5 +30,11 @@ public class WebConfig {
         source.registerCorsConfiguration("/**", configuration);
 
         return source;
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // Disable static handling for `/uploads/**` so the controller handles it
+        registry.addResourceHandler("/uploads/**").setCachePeriod(0);
     }
 }
