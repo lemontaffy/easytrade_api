@@ -86,10 +86,14 @@ public class AuthController extends BaseController {
             // Assuming your user object has a method to get the profile photo
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
             response.put("profilePhoto", userMapper.getActiveProfile(userDetails.getUserId(), true).getPhotoUrl()); // Replace with your actual profile photo method
+            response.put("userId", userDetails.getUserId());
+            response.put("activeProfileId", userMapper.getActiveProfile(userDetails.getUserId(), true).getId());
         } else {
             // Not authenticated
             response.put("loggedIn", false);
             response.put("profilePhoto", null);
+            response.put("userId", null);
+            response.put("activeProfileId", null);
         }
 
         return ResponseEntity.ok(response);

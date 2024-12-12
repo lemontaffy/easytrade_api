@@ -18,5 +18,5 @@ public interface ItemMapper {
         )
     """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    int insertItem(Item item);
+    Item insertItem(Item item);
 }
