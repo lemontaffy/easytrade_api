@@ -10,9 +10,9 @@ public interface DetailItemMapper {
 
     @Insert("""
         INSERT INTO detail_items (
-            item_id, detail_name, detail_description, detail_image_url, price, leftovers, max_buy_count
+            item_id, detail_name, detail_image_url, price, leftovers, max_buy_count
         ) VALUES (
-            #{itemId}, #{detailName}, #{detailDescription}, #{detailImageUrl}, #{price}, #{leftovers}, #{maxBuyCount}
+            #{itemId}, #{detailName}, #{detailImgUrl}, #{price}, #{leftovers}, #{maxBuyCount}
         )
     """)
     @Options(useGeneratedKeys = true, keyProperty = "id")

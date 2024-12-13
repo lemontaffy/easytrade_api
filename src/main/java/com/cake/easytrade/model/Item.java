@@ -20,12 +20,13 @@ public class Item {
     private String thumbnailUrl;
     private String title;
     private String tags; // Stored as JSONB
-    private LocalDateTime salesStartDate;
-    private LocalDateTime salesEndDate;
+    private String salesStartDate;
+    private String salesEndDate;
     private String qrCode;
     private String deliveryFee; // Stored as JSONB
-    private Integer leftovers;
     private String productBoard;
+    private Integer likes;
+    private Integer hits;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

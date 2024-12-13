@@ -35,6 +35,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // Disable static handling for `/uploads/**` so the controller handles it
-        registry.addResourceHandler("/uploads/**").setCachePeriod(0);
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:uploads/");
     }
 }
